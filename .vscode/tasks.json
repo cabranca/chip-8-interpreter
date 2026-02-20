@@ -1,0 +1,21 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Debug",
+            "type": "shell",
+            "command": "cmake -S . -B build/debug -DCMAKE_BUILD_TYPE=Debug && cmake --build build/debug -j $(nproc)",
+            "group": "build",
+            "problemMatcher": ["$gcc"],
+            "detail": "Configura y compila en modo Debug usando todos los cores."
+        },
+        {
+            "label": "Build Release",
+            "type": "shell",
+            "command": "cmake -S . -B build/release -DCMAKE_BUILD_TYPE=Release && cmake --build build/release -j $(nproc)",
+            "group": "build",
+            "problemMatcher": ["$gcc"],
+            "detail": "Configura y compila en modo Release con optimizaciones activadas."
+        }
+    ]
+}
