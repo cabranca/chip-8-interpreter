@@ -11,7 +11,9 @@ namespace chip8
     class Chip8
     {
       public:
-        Chip8(SDL_Texture *texture);
+        Chip8(SDL_Renderer *renderer, SDL_Texture *texture);
+
+        void loadProgram(uint8_t *data, size_t size);
 
         void run();
 
@@ -30,7 +32,9 @@ namespace chip8
         uint8_t m_Delay = 0;
         uint8_t m_Sound = 0;
 
+        SDL_Renderer *m_Renderer;
         SDL_Texture *m_Texture;
+        int m_Pitch = 1;
 
         uint16_t fetch();
         void decodeExecute(uint16_t instruction);
@@ -40,5 +44,6 @@ namespace chip8
         void addRegister(uint8_t index, uint8_t value);
         void setIndexRegister(uint16_t value);
         void draw(uint8_t regx, uint8_t regy, uint8_t height);
+        void updateScreen();
     };
 } // namespace chip8
