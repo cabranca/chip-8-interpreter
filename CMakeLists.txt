@@ -9,6 +9,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_subdirectory(external/SDL2)
 
-add_executable(chip-8-interpreter src/Main.cpp src/Chip8.cpp)
+add_executable(chip-8-interpreter src/Main.cpp src/Chip8.cpp src/Renderer.cpp)
 
 target_link_libraries(chip-8-interpreter PRIVATE SDL3::SDL3)
