@@ -1,4 +1,10 @@
 {
   "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
-  "C_Cpp.default.compileCommands": "${workspaceFolder}/build/debug/compile_commands.json"
+  "C_Cpp.default.compileCommands": "${workspaceFolder}/build/Debug/compile_commands.json",
+  "cmake.buildDirectory": "${workspaceFolder}/build/${buildType}",
+  "cmake.generator": "Unix Makefiles",
+  "cmake.configureSettings": {
+    "CMAKE_C_COMPILER": "/usr/bin/gcc-14",
+    "CMAKE_CXX_COMPILER": "/usr/bin/g++-14"
+  }
 }
