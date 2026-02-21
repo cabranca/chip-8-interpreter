@@ -8,10 +8,6 @@ namespace chip8
     constexpr uint16_t NN_MASK = 0x00FF;
     constexpr uint16_t NNN_MASK = 0x0FFF;
 
-    Chip8::Chip8(SDL_Renderer* renderer, SDL_Texture *texture) : m_Renderer(renderer), m_Texture(texture)
-    {
-    }
-
     void Chip8::loadProgram(uint8_t *data, size_t size)
     {
         memcpy(&m_Memory.at(0x200), data, size);
@@ -86,7 +82,7 @@ namespace chip8
         for (auto &pixel : m_Video)
             pixel = 0;
         m_Reg.at(0xF) = 0;
-        updateScreen();
+        m_Renderer.update(m_Video);
     }
 
     void Chip8::jump(uint16_t address)
@@ -141,32 +137,6 @@ namespace chip8
             }
         }
 
-        updateScreen();
-    }
-    
-    void Chip8::updateScreen()
-    {
-        uint32_t* pixels;
-        int pitch;
-        SDL_LockTexture(m_Texture, nullptr, reinterpret_cast<void **>(&pixels), &pitch);
-
-        const int stride = pitch / sizeof(uint32_t);
-
-        for (int y = 0; y < 32; y++)
-        {
-            for (int x = 0; x < 64; x++)
-            {
-                const uint8_t pixel = m_Video.at(y * 64 + x);
-                pixels[y * stride + x] = pixel ? 0xFFFFFFFF : 0x000000FF;
-            }
-            
-        }
-
-        SDL_UnlockTexture(m_Texture);
-
-        SDL_SetRenderDrawColor(m_Renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-        SDL_RenderClear(m_Renderer);
-        SDL_RenderTexture(m_Renderer, m_Texture, nullptr, nullptr);
-        SDL_RenderPresent(m_Renderer);  
+        m_Renderer.update(m_Video);
     }
 } // namespace chip8
