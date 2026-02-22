@@ -145,6 +145,65 @@ namespace chip8
         m_PC += m_Reg.at(x) != m_Reg.at(y) ? m_PC + 2 : m_PC;
     }
 
+    void Chip8::setXtoY(uint8_t x, uint8_t y)
+    {
+        m_Reg.at(x) = m_Reg.at(y);
+    }
+
+    void Chip8::binaryOR(uint8_t x, uint8_t y)
+    {
+        m_Reg.at(x) |= m_Reg.at(y);
+    }
+
+    void Chip8::binaryAND(uint8_t x, uint8_t y)
+    {
+        m_Reg.at(x) &= m_Reg.at(y);
+    }
+
+    void Chip8::binaryXOR(uint8_t x, uint8_t y)
+    {
+        m_Reg.at(x) ^= m_Reg.at(y);
+    }
+
+    void Chip8::add(uint8_t x, uint8_t y)
+    {
+        if (m_Reg.at(x) + m_Reg.at(y) > 255)
+            m_Reg.at(0xF) = 1;
+        else
+            m_Reg.at(0xF) = 0;
+        m_Reg.at(x) += m_Reg.at(y);
+    }
+
+    void Chip8::substractYtoX(uint8_t x, uint8_t y)
+    {
+        if (m_Reg.at(x) > m_Reg.at(y))
+            m_Reg.at(0xF) = 1;
+        else
+            m_Reg.at(0xF) = 0;
+        m_Reg.at(x) -= m_Reg.at(y);
+    }
+
+    void Chip8::substractXtoY(uint8_t x, uint8_t y)
+    {
+        if (m_Reg.at(y) > m_Reg.at(x))
+            m_Reg.at(0xF) = 1;
+        else
+            m_Reg.at(0xF) = 0;
+        m_Reg.at(x) = m_Reg.at(y) - m_Reg.at(x);
+    }
+
+    void Chip8::shiftL(uint8_t x, uint8_t y)
+    {
+        m_Reg.at(x) = m_Reg.at(y);
+        m_Reg.at(x) <<= 1;
+    }
+
+    void Chip8::shiftR(uint8_t x, uint8_t y)
+    {
+        m_Reg.at(x) = m_Reg.at(y);
+        m_Reg.at(x) >>= 1;
+    }
+
     void Chip8::setRegister(uint8_t index, uint8_t value)
     {
         m_Reg.at(index) = value;

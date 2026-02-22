@@ -43,6 +43,16 @@ namespace chip8
         void jumpNotEqual(uint8_t x, uint8_t nn);
         void jumpRegEqual(uint8_t x, uint8_t y);
         void jumpRegNotEqual(uint8_t x, uint8_t y);
+
+        void setXtoY(uint8_t x, uint8_t y);
+        void binaryOR(uint8_t x, uint8_t y);
+        void binaryAND(uint8_t x, uint8_t y);
+        void binaryXOR(uint8_t x, uint8_t y);
+        void add(uint8_t x, uint8_t y);
+        void substractYtoX(uint8_t x, uint8_t y);
+        void substractXtoY(uint8_t x, uint8_t y);
+        void shiftL(uint8_t x, uint8_t y);
+        void shiftR(uint8_t x, uint8_t y);
         
         void setRegister(uint8_t index, uint8_t value);
         
