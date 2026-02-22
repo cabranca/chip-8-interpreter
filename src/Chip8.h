@@ -1,5 +1,6 @@
 #pragma once
 
+#include <random>
 #include <stack>
 
 #include "Renderer.h"
@@ -26,6 +27,9 @@ namespace chip8
 
         uint8_t m_Delay = 0;
         uint8_t m_Sound = 0;
+
+        std::mt19937 m_Rng{std::random_device{}()};
+        std::uniform_int_distribution<uint8_t> m_RngDist{0, 255};
 
         Renderer m_Renderer;
 
@@ -59,6 +63,10 @@ namespace chip8
         void addRegister(uint8_t index, uint8_t value);
         
         void setIndexRegister(uint16_t value);
+
+        void jumpOffset(uint16_t address);
+
+        void random(uint8_t x, uint8_t nn);
         
         void draw(uint8_t regx, uint8_t regy, uint8_t height);
     };

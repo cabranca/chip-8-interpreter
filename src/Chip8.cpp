@@ -129,6 +129,9 @@ namespace chip8
             case 0xB:
                 jumpOffset(instruction & NNN_MASK);
                 break;
+            case 0xC:
+                random(vx, nn);
+                break;
             case 0xD:
                 draw(vx, vy, n);
                 break;
@@ -257,6 +260,11 @@ namespace chip8
     void Chip8::jumpOffset(uint16_t address)
     {
         m_PC = address + m_Reg.at(0);
+    }
+
+    void Chip8::random(uint8_t x, uint8_t nn)
+    {
+        m_Reg.at(x) = m_RngDist(m_Rng) & nn;
     }
 
     void Chip8::draw(uint8_t regx, uint8_t regy, uint8_t height)
