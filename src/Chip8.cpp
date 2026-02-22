@@ -8,6 +8,69 @@ namespace chip8
     constexpr uint16_t NN_MASK = 0x00FF;
     constexpr uint16_t NNN_MASK = 0x0FFF;
 
+    constexpr uint16_t FONT_START_ADDRESS = 0x050;
+
+    // Each character is a 4x5 pixel sprite stored as 5 bytes.
+    // Characters: 0 1 2 3 4 5 6 7 8 9 A B C D E F
+    constexpr std::array<uint8_t, 80> FONT_SET = {
+        0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
+        0x20, 0x60, 0x20, 0x20, 0x70, // 1
+        0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
+        0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
+        0x90, 0x90, 0xF0, 0x10, 0x10, // 4
+        0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
+        0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
+        0xF0, 0x10, 0x20, 0x40, 0x40, // 7
+        0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
+        0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
+        0xF0, 0x90, 0xF0, 0x90, 0x90, // A
+        0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
+        0xF0, 0x80, 0x80, 0x80, 0xF0, // C
+        0xE0, 0x90, 0x90, 0x90, 0xE0, // D
+        0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
+        0xF0, 0x80, 0xF0, 0x80, 0x80, // F
+    };
+
+    constexpr std::array<std::pair<SDL_Scancode, uint8_t>, 16> SDL_TO_CHIP8_KEYS = {{
+        {SDL_SCANCODE_1, 0x1},
+        {SDL_SCANCODE_2, 0x2},
+        {SDL_SCANCODE_3, 0x3},
+        {SDL_SCANCODE_4, 0xC},
+        {SDL_SCANCODE_Q, 0x4},
+        {SDL_SCANCODE_W, 0x5},
+        {SDL_SCANCODE_E, 0x6},
+        {SDL_SCANCODE_R, 0xD},
+        {SDL_SCANCODE_A, 0x7},
+        {SDL_SCANCODE_S, 0x8},
+        {SDL_SCANCODE_D, 0x9},
+        {SDL_SCANCODE_F, 0xE},
+        {SDL_SCANCODE_Z, 0xA},
+        {SDL_SCANCODE_X, 0x0},
+        {SDL_SCANCODE_C, 0xB},
+        {SDL_SCANCODE_V, 0xF},
+    }};
+
+    constexpr std::optional<uint8_t> findChip8Key(SDL_Scancode scancode)
+    {
+        for (const auto& [sc, key] : SDL_TO_CHIP8_KEYS)
+        {
+            if (sc == scancode)
+                return key;
+        }
+        return std::nullopt;
+    }
+
+    Chip8::Chip8()
+    {
+        m_Memory.fill(0);
+        m_Reg.fill(0);
+        m_Video.fill(0);
+        m_KeyMap.fill(false);
+
+        // Load font set into memory at 0x050
+        std::copy(FONT_SET.begin(), FONT_SET.end(), m_Memory.begin() + FONT_START_ADDRESS);
+    }
+
     void Chip8::loadProgram(uint8_t *data, size_t size)
     {
         memcpy(&m_Memory.at(0x200), data, size);
@@ -25,6 +88,14 @@ namespace chip8
                 {
                 case SDL_EVENT_QUIT:
                     running = false;
+                    break;
+                case SDL_EVENT_KEY_DOWN:
+                    if (auto key = findChip8Key(event.key.scancode))
+                        m_KeyMap[*key] = true;
+                    break;
+                case SDL_EVENT_KEY_UP:
+                    if (auto key = findChip8Key(event.key.scancode))
+                        m_KeyMap[*key] = false;
                     break;
                 default:
                     break;
@@ -207,22 +278,22 @@ namespace chip8
 
     void Chip8::jumpEqual(uint8_t x, uint8_t nn)
     {
-        m_PC += m_Reg.at(x) == nn ? m_PC + 2 : m_PC;
+        m_PC = m_Reg.at(x) == nn ? m_PC + 2 : m_PC;
     }
 
     void Chip8::jumpNotEqual(uint8_t x, uint8_t nn)
     {
-        m_PC += m_Reg.at(x) != nn ? m_PC + 2 : m_PC;
+        m_PC = m_Reg.at(x) != nn ? m_PC + 2 : m_PC;
     }
 
     void Chip8::jumpRegEqual(uint8_t x, uint8_t y)
     {
-        m_PC += m_Reg.at(x) == m_Reg.at(y) ? m_PC + 2 : m_PC;
+        m_PC = m_Reg.at(x) == m_Reg.at(y) ? m_PC + 2 : m_PC;
     }
 
     void Chip8::jumpRegNotEqual(uint8_t x, uint8_t y)
     {
-        m_PC += m_Reg.at(x) != m_Reg.at(y) ? m_PC + 2 : m_PC;
+        m_PC = m_Reg.at(x) != m_Reg.at(y) ? m_PC + 2 : m_PC;
     }
 
     void Chip8::setXtoY(uint8_t x, uint8_t y)
@@ -275,12 +346,14 @@ namespace chip8
     void Chip8::shiftL(uint8_t x, uint8_t y)
     {
         m_Reg.at(x) = m_Reg.at(y);
+        m_Reg.at(0xF) = (m_Reg.at(x) >> 7) & 1;
         m_Reg.at(x) <<= 1;
     }
 
     void Chip8::shiftR(uint8_t x, uint8_t y)
     {
         m_Reg.at(x) = m_Reg.at(y);
+        m_Reg.at(0xF) = m_Reg.at(x) & 1;
         m_Reg.at(x) >>= 1;
     }
 
@@ -346,12 +419,12 @@ namespace chip8
     
     void Chip8::jumpKey(uint8_t x)
     {
-
+        m_PC = m_KeyMap.at(m_Reg.at(x)) ? m_PC + 2 : m_PC;
     }
     
     void Chip8::jumpNotKey(uint8_t x)
     {
-
+        m_PC = !m_KeyMap.at(m_Reg.at(x)) ? m_PC + 2 : m_PC;
     }
     
     void Chip8::setXToDelay(uint8_t x)
@@ -380,17 +453,28 @@ namespace chip8
 
     void Chip8::getKey(uint8_t x)
     {
+        for (uint8_t i = 0; i <= 0xF; i++)
+        {
+            if (m_KeyMap.at(i))
+            {
+                m_Reg.at(x) = i;
+                return;
+            }
+        }
+        m_PC -= 2;
     }
 
     void Chip8::setIndexToFont(uint8_t x)
     {
-        m_IReg = m_Reg.at(x);
+        m_IReg = FONT_START_ADDRESS + (m_Reg.at(x) & 0x0F) * 5;
     }
 
     void Chip8::splitValue(uint8_t x)
     {
-        for (int i = 0; i < 3; i++)
-            m_Memory.at(m_IReg + i) = m_Reg.at(x) % static_cast<uint8_t>(std::pow(10, i));
+        uint8_t value = m_Reg.at(x);
+        m_Memory.at(m_IReg)     = value / 100;
+        m_Memory.at(m_IReg + 1) = (value / 10) % 10;
+        m_Memory.at(m_IReg + 2) = value % 10;
     }
 
     void Chip8::storeMemory(uint8_t x)

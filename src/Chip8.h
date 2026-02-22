@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include <random>
 #include <stack>
 
@@ -11,6 +12,7 @@ namespace chip8
     class Chip8
     {
       public:
+        Chip8();
         void loadProgram(uint8_t *data, size_t size);
         void run();
 
@@ -32,6 +34,8 @@ namespace chip8
         std::uniform_int_distribution<uint8_t> m_RngDist{0, 255};
 
         Renderer m_Renderer;
+
+        std::array<bool, 16> m_KeyMap;
 
         uint16_t fetch();
         void decodeExecute(uint16_t instruction);
