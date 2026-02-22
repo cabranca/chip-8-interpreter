@@ -25,8 +25,14 @@ int main(int argc, char **argv)
     std::fseek(romFile, 0, SEEK_SET);
 
     std::vector<uint8_t> romData(romSize);
-    std::fread(romData.data(), 1, romSize, romFile);
+    const auto bytesRead = std::fread(romData.data(), 1, romSize, romFile);
     std::fclose(romFile);
+
+    if (bytesRead != static_cast<size_t>(romSize))
+    {
+        std::println(stderr, "Failed to read ROM: expected {} bytes, got {}", romSize, bytesRead);
+        return EXIT_FAILURE;
+    }
 
     std::println("Initializing CHIP-8 INTERPRETER");
     chip8::Chip8 interpreter;
