@@ -146,6 +146,37 @@ namespace chip8
                         break;
                 }
                 break;
+            case 0xF:
+                switch (nn) {
+                    case 0x07:
+                        setXToDelay(vx);
+                        break;
+                    case 0x15:
+                        setDelay(vx);
+                        break;
+                    case 0x18:
+                        setSound(vx);
+                        break;
+                    case 0x1E:
+                        addToIndex(vx);
+                        break;
+                    case 0x0A:
+                        getKey(vx);
+                        break;
+                    case 0x29:
+                        setIndexToFont(vx);
+                        break;
+                    case 0x33:
+                        splitValue(vx);
+                        break;
+                    case 0x55:
+                        storeMemory(vx);
+                        break;
+                    case 0x65:
+                        loadMemory(vx);
+                        break;
+                }
+                break;
         }
     }
 
@@ -322,4 +353,56 @@ namespace chip8
     {
 
     }
+    
+    void Chip8::setXToDelay(uint8_t x)
+    {
+        m_Reg.at(x) = m_DelayTimer;
+    }
+    
+    void Chip8::setDelay(uint8_t x)
+    {
+        m_DelayTimer = m_Reg.at(x);
+    }
+    
+    void Chip8::setSound(uint8_t x)
+    {
+        m_SoundTimer = m_Reg.at(x);
+    }
+    
+    void Chip8::addToIndex(uint8_t x)
+    {
+        if (m_IReg + m_Reg.at(x) > 0x0FFF)
+            m_Reg.at(0xF) = 1;
+        else
+            m_Reg.at(0xF) = 0;
+        m_IReg += m_Reg.at(x);
+    }
+
+    void Chip8::getKey(uint8_t x)
+    {
+    }
+
+    void Chip8::setIndexToFont(uint8_t x)
+    {
+        m_IReg = m_Reg.at(x);
+    }
+
+    void Chip8::splitValue(uint8_t x)
+    {
+        for (int i = 0; i < 3; i++)
+            m_Memory.at(m_IReg + i) = m_Reg.at(x) % static_cast<uint8_t>(std::pow(10, i));
+    }
+
+    void Chip8::storeMemory(uint8_t x)
+    {
+        for (uint8_t i = 0; i <= x; i++)
+            m_Memory.at(m_IReg +  i) = m_Reg.at(i);
+    }
+
+    void Chip8::loadMemory(uint8_t x)
+    {
+        for (uint8_t i = 0; i <= x; i++)
+            m_Reg.at(i) = m_Memory.at(m_IReg +  i);
+    }
+
 } // namespace chip8

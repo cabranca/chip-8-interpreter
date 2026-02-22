@@ -25,8 +25,8 @@ namespace chip8
 
         std::array<uint8_t, 64 * 32> m_Video;
 
-        uint8_t m_Delay = 0;
-        uint8_t m_Sound = 0;
+        uint8_t m_DelayTimer = 0;
+        uint8_t m_SoundTimer = 0;
 
         std::mt19937 m_Rng{std::random_device{}()};
         std::uniform_int_distribution<uint8_t> m_RngDist{0, 255};
@@ -72,5 +72,17 @@ namespace chip8
 
         void jumpKey(uint8_t x);
         void jumpNotKey(uint8_t x);
+
+        void setXToDelay(uint8_t x);
+        void setDelay(uint8_t x);
+        void setSound(uint8_t x);
+
+        void addToIndex(uint8_t x);
+        void getKey(uint8_t x);
+        void setIndexToFont(uint8_t x);
+        void splitValue(uint8_t x);
+
+        void storeMemory(uint8_t x);
+        void loadMemory(uint8_t x);
     };
 } // namespace chip8
