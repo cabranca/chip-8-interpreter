@@ -91,6 +91,38 @@ namespace chip8
             case 7:
                 addRegister(vx, nn);
                 break;
+            case 8:
+                switch (n)
+                {
+                    case 0:
+                        setXtoY(vx, vy);
+                        break;
+                    case 1:
+                        binaryOR(vx, vy);
+                        break;
+                    case 2:
+                        binaryAND(vx, vy);
+                        break;
+                    case 3:
+                        binaryXOR(vx, vy);
+                        break;
+                    case 4:
+                        add(vx, vy);
+                        break;
+                    case 5:
+                        substractYtoX(vx, vy);
+                        break;
+                    case 7:
+                        substractXtoY(vx, vy);
+                        break;
+                    case 6:
+                        shiftR(vx, vy);
+                        break;
+                    case 0xE:
+                        shiftL(vx, vy);
+                        break;
+                }
+                break;
             case 0xA:
                 setIndexRegister(instruction & NNN_MASK);
                 break;
