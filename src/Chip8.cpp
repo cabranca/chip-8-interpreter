@@ -56,24 +56,47 @@ namespace chip8
         uint16_t nnn = instruction & NNN_MASK;
         switch (opcode)
         {
-        case 0:
-            clearScreen();
-            break;
-        case 1:
-            jump(instruction & NNN_MASK);
-            break;
-        case 6:
-            setRegister(vx, nn);
-            break;
-        case 7:
-            addRegister(vx, nn);
-            break;
-        case 0xA:
-            setIndexRegister(instruction & NNN_MASK);
-            break;
-        case 0xD:
-            draw(vx, vy, n);
-            break;
+            case 0:
+                switch (n)
+                {
+                    case 0:
+                        clearScreen();
+                        break;
+                    case 0xE:
+                        returnSubroutine();
+                        break;
+                }
+                break;
+            case 1:
+                jump(instruction & NNN_MASK);
+                break;
+            case 2:
+                callSubroutine(instruction & NNN_MASK);
+                break;
+            case 3:
+                jumpEqual(vx, nn);
+                break;
+            case 4:
+                jumpNotEqual(vx, nn);
+                break;
+            case 5:
+                jumpRegEqual(vx, vy);
+                break;
+            case 9:
+                jumpRegNotEqual(vx, vy);
+                break;
+            case 6:
+                setRegister(vx, nn);
+                break;
+            case 7:
+                addRegister(vx, nn);
+                break;
+            case 0xA:
+                setIndexRegister(instruction & NNN_MASK);
+                break;
+            case 0xD:
+                draw(vx, vy, n);
+                break;
         }
     }
 
@@ -88,6 +111,38 @@ namespace chip8
     void Chip8::jump(uint16_t address)
     {
         m_PC = address;
+    }
+
+    void Chip8::callSubroutine(uint16_t address)
+    {
+        m_Stack.push(m_PC);
+        m_PC = address;
+    }
+
+    void Chip8::returnSubroutine()
+    {
+        m_PC = m_Stack.top();
+        m_Stack.pop();
+    }
+
+    void Chip8::jumpEqual(uint8_t x, uint8_t nn)
+    {
+        m_PC += x == nn ? m_PC + 2 : m_PC;
+    }
+
+    void Chip8::jumpNotEqual(uint8_t x, uint8_t nn)
+    {
+        m_PC += x != nn ? m_PC + 2 : m_PC;
+    }
+
+    void Chip8::jumpRegEqual(uint8_t x, uint8_t y)
+    {
+        m_PC += x == y ? m_PC + 2 : m_PC;
+    }
+
+    void Chip8::jumpRegNotEqual(uint8_t x, uint8_t y)
+    {
+        m_PC += x != y ? m_PC + 2 : m_PC;
     }
 
     void Chip8::setRegister(uint8_t index, uint8_t value)
