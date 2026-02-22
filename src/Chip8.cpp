@@ -127,22 +127,22 @@ namespace chip8
 
     void Chip8::jumpEqual(uint8_t x, uint8_t nn)
     {
-        m_PC += x == nn ? m_PC + 2 : m_PC;
+        m_PC += m_Reg.at(x) == nn ? m_PC + 2 : m_PC;
     }
 
     void Chip8::jumpNotEqual(uint8_t x, uint8_t nn)
     {
-        m_PC += x != nn ? m_PC + 2 : m_PC;
+        m_PC += m_Reg.at(x) != nn ? m_PC + 2 : m_PC;
     }
 
     void Chip8::jumpRegEqual(uint8_t x, uint8_t y)
     {
-        m_PC += x == y ? m_PC + 2 : m_PC;
+        m_PC += m_Reg.at(x) == m_Reg.at(y) ? m_PC + 2 : m_PC;
     }
 
     void Chip8::jumpRegNotEqual(uint8_t x, uint8_t y)
     {
-        m_PC += x != y ? m_PC + 2 : m_PC;
+        m_PC += m_Reg.at(x) != m_Reg.at(y) ? m_PC + 2 : m_PC;
     }
 
     void Chip8::setRegister(uint8_t index, uint8_t value)
