@@ -69,5 +69,8 @@ namespace chip8
         void random(uint8_t x, uint8_t nn);
         
         void draw(uint8_t regx, uint8_t regy, uint8_t height);
+
+        void jumpKey(uint8_t x);
+        void jumpNotKey(uint8_t x);
     };
 } // namespace chip8

@@ -135,6 +135,17 @@ namespace chip8
             case 0xD:
                 draw(vx, vy, n);
                 break;
+            case 0xE:
+                switch (vy)
+                {
+                    case 9:
+                        jumpKey(vx);
+                        break;
+                    case 0xA:
+                        jumpNotKey(vx);
+                        break;
+                }
+                break;
         }
     }
 
@@ -300,5 +311,15 @@ namespace chip8
         }
 
         m_Renderer.update(m_Video);
+    }
+    
+    void Chip8::jumpKey(uint8_t x)
+    {
+
+    }
+    
+    void Chip8::jumpNotKey(uint8_t x)
+    {
+
     }
 } // namespace chip8
