@@ -126,6 +126,9 @@ namespace chip8
             case 0xA:
                 setIndexRegister(instruction & NNN_MASK);
                 break;
+            case 0xB:
+                jumpOffset(instruction & NNN_MASK);
+                break;
             case 0xD:
                 draw(vx, vy, n);
                 break;
@@ -249,6 +252,11 @@ namespace chip8
     void Chip8::setIndexRegister(uint16_t value)
     {
         m_IReg = value;
+    }
+
+    void Chip8::jumpOffset(uint16_t address)
+    {
+        m_PC = address + m_Reg.at(0);
     }
 
     void Chip8::draw(uint8_t regx, uint8_t regy, uint8_t height)
