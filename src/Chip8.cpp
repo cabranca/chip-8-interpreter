@@ -1,5 +1,7 @@
 #include "Chip8.h"
 
+#include <print>
+
 namespace chip8
 {
     constexpr uint16_t X_MASK = 0x0F00;
@@ -69,6 +71,20 @@ namespace chip8
 
         // Load font set into memory at 0x050
         std::copy(FONT_SET.begin(), FONT_SET.end(), m_Memory.begin() + FONT_START_ADDRESS);
+
+        std::println("Initializing SDL Audio");
+        SDL_AudioSpec audioSpecs;
+        audioSpecs.format = SDL_AUDIO_S8;
+        audioSpecs.channels = 1;
+        audioSpecs.freq = 8000;
+
+        m_AudioStream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &audioSpecs, nullptr, nullptr);
+        if (!m_AudioStream)
+        {
+            auto error = SDL_GetError();
+            std::println("Failed to create SDL Audio: {0}", error);
+        }
+        SDL_ResumeAudioStreamDevice(m_AudioStream);
     }
 
     void Chip8::loadProgram(uint8_t *data, size_t size)
@@ -78,8 +94,19 @@ namespace chip8
 
     void Chip8::run()
     {
-        bool running = true;
-        while (running)
+        // 700 instructions per second
+        // 60Hz Timers.
+        constexpr float INSTRUCTION_DUR = 1000.f / 700.f;
+        constexpr float FRAME_DUR = 1000.f / 60.f;
+        float currentTime = 0.f;
+        float lastInstructionTime = static_cast<float>(SDL_GetTicks());
+        float lastFrameTime = lastInstructionTime;
+        float instructionDelta = 0.f;
+        float frameDelta = 0.f;
+
+        static int current_sine_sample = 0;
+
+        while (m_Running)
         {
             SDL_Event event;
             while (SDL_PollEvent(&event))
@@ -87,7 +114,7 @@ namespace chip8
                 switch (event.type)
                 {
                 case SDL_EVENT_QUIT:
-                    running = false;
+                    m_Running = false;
                     break;
                 case SDL_EVENT_KEY_DOWN:
                     if (auto key = findChip8Key(event.key.scancode))
@@ -102,8 +129,57 @@ namespace chip8
                 }
             }
 
-            auto instruction = fetch();
-            decodeExecute(instruction);
+            currentTime = static_cast<float>(SDL_GetTicks());
+            instructionDelta = currentTime - lastInstructionTime;
+            frameDelta = currentTime - lastFrameTime;
+
+            if (instructionDelta >= INSTRUCTION_DUR)
+            {
+                auto instruction = fetch();
+                decodeExecute(instruction);
+                lastInstructionTime = currentTime;
+            }
+
+            if (frameDelta >= FRAME_DUR)
+            {
+                if (m_DelayTimer)
+                    m_DelayTimer--;
+                if (m_SoundTimer)
+                {
+                    SDL_ResumeAudioStreamDevice(m_AudioStream);
+                    const int minimum_audio = (8000 * sizeof(float)) / 2;
+                    if (SDL_GetAudioStreamQueued(m_AudioStream) < minimum_audio)
+                    {
+                        static float samples[512]; /* this will feed 512 samples each frame
+                                                      until we get to our maximum. */
+                        int i;
+
+                        /* generate a 440Hz pure tone */
+                        for (i = 0; i < SDL_arraysize(samples); i++)
+                        {
+                            const int freq = 440;
+                            const float phase = current_sine_sample * freq / 8000.0f;
+                            samples[i] = SDL_sinf(phase * 2 * SDL_PI_F);
+                            current_sine_sample++;
+                        }
+
+                        /* wrapping around to avoid floating-point errors */
+                        current_sine_sample %= 8000;
+
+                        /* feed the new data to the stream. It will queue at the end, and
+                         * trickle out as the hardware needs more data. */
+                        SDL_PutAudioStreamData(m_AudioStream, samples, sizeof(samples));
+                    }
+                    m_SoundTimer--;
+                }
+                else
+                {
+                    SDL_PauseAudioStreamDevice(m_AudioStream);
+                }
+                    
+
+                lastFrameTime = currentTime;
+            }
         }
     }
 

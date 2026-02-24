@@ -31,11 +31,16 @@ namespace chip8
         uint8_t m_SoundTimer = 0;
 
         std::mt19937 m_Rng{std::random_device{}()};
-        std::uniform_int_distribution<uint8_t> m_RngDist{0, 255};
+        std::uniform_int_distribution<unsigned short> m_RngDist{0, 255};
 
         Renderer m_Renderer;
 
         std::array<bool, 16> m_KeyMap;
+
+        bool m_Running = true;
+        bool m_Beeping = false;
+
+        SDL_AudioStream *m_AudioStream = nullptr;
 
         uint16_t fetch();
         void decodeExecute(uint16_t instruction);
