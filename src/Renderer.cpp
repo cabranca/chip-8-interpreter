@@ -12,7 +12,7 @@ namespace chip8
     Renderer::Renderer()
     {
         std::println("Initializing SDL Video Subsystem");
-        bool success = SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
+        bool success = SDL_InitSubSystem(SDL_INIT_VIDEO);
         if (!success)
         {
             auto error = SDL_GetError();
@@ -52,7 +52,7 @@ namespace chip8
             SDL_DestroyRenderer(m_Renderer);
         if (m_Window)
             SDL_DestroyWindow(m_Window);
-        SDL_QuitSubSystem(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
+        SDL_QuitSubSystem(SDL_INIT_VIDEO);
     }
 
     void Renderer::update(const std::array<uint8_t, 2048> frameBuffer)

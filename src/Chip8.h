@@ -4,6 +4,7 @@
 #include <random>
 #include <stack>
 
+#include "AudioEngine.h"
 #include "Renderer.h"
 
 namespace chip8
@@ -34,13 +35,12 @@ namespace chip8
         std::uniform_int_distribution<unsigned short> m_RngDist{0, 255};
 
         Renderer m_Renderer;
+        AudioEngine m_Audio;
 
         std::array<bool, 16> m_KeyMap;
 
         bool m_Running = true;
         bool m_Beeping = false;
-
-        SDL_AudioStream *m_AudioStream = nullptr;
 
         uint16_t fetch();
         void decodeExecute(uint16_t instruction);
