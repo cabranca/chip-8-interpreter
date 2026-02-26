@@ -13,6 +13,7 @@ add_subdirectory(external/SDL2)
 
 add_executable(chip-8-interpreter src/Main.cpp src/Chip8.cpp src/Renderer.cpp src/AudioEngine.cpp)
 
-target_sources(chip-8-interpreter PUBLIC FILE_SET CXX_MODULES FILES src/TestModule.ixx)
+target_sources(chip-8-interpreter PUBLIC FILE_SET CXX_MODULES 
+    FILES src/chip8.ixx src/chip8-interpreter.ixx src/chip8-renderer.ixx src/chip8-audio.ixx)
 
 target_link_libraries(chip-8-interpreter PRIVATE SDL3::SDL3-static)

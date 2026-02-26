@@ -1,12 +1,18 @@
-#pragma once
+module;
 
-#include <SDL3/SDL.h>
-#include <array>
 #include <cstdint>
+
+class SDL_Window;
+class SDL_Renderer;
+class SDL_Texture;
+
+export module chip8:renderer;
+
+import std;
 
 namespace chip8
 {
-    class Renderer
+    export class Renderer
     {
       public:
         Renderer();

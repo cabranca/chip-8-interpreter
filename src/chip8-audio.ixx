@@ -1,10 +1,12 @@
-#pragma once
+module;
 
-#include <SDL3/SDL.h>
+class SDL_AudioStream;
+
+export module chip8:audio;
 
 namespace chip8
 {
-    class AudioEngine
+    export class AudioEngine
     {
       public:
         AudioEngine();

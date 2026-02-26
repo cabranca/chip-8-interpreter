@@ -1,11 +1,5 @@
-#include <expected>
-#include <filesystem>
-#include <fstream>
-#include <print>
-#include <string>
-#include <vector>
-
-import TestModule;
+import std;
+import chip8;
 
 enum class ROMLoadError
 {
@@ -29,7 +23,6 @@ static std::expected<std::vector<uint8_t>, ROMLoadErrorData> openROM(int argc, c
     std::error_code errorCode;
     if (argc < 2)
     {
-        std::println(stderr, "Usage: {} <rom-file>\n", argv[0]);
         return std::unexpected(
             ROMLoadErrorData{ROMLoadError::ROMNotSelected, "", errorCode.message()});
     }

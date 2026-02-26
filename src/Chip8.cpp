@@ -1,17 +1,11 @@
 module;
 
-#include <algorithm>
-#include <array>
 #include <cstdint>
 #include <cstring>
-#include <optional>
-#include <print>
-#include <utility>
-#include <vector>
-
 #include <SDL3/SDL.h>
 
-module TestModule;
+module chip8;
+import std;
 
 
 namespace chip8
