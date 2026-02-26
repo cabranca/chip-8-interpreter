@@ -73,9 +73,9 @@ namespace chip8
         std::copy(FONT_SET.begin(), FONT_SET.end(), m_Memory.begin() + FONT_START_ADDRESS);
     }
 
-    void Chip8::loadProgram(uint8_t *data, size_t size)
+    void Chip8::loadProgram(const std::vector<uint8_t> program)
     {
-        memcpy(&m_Memory.at(0x200), data, size);
+        memcpy(&m_Memory.at(0x200), program.data(), program.size());
     }
 
     void Chip8::run()

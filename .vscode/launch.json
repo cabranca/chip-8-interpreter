@@ -20,7 +20,6 @@
                 }
             ],
             "preLaunchTask": "Build Debug",
-            "miDebuggerPath": "/usr/bin/gdb"
         },
         {
             "name": "Release: chip-8-interpreter",
@@ -41,7 +40,6 @@
                 }
             ],
             "preLaunchTask": "Build Release",
-            "miDebuggerPath": "/usr/bin/gdb"
         }
     ]
 }

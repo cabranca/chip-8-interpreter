@@ -4,33 +4,33 @@
         {
             "label": "Build Debug",
             "type": "shell",
-            "command": "cd build/Debug && make chip-8-interpreter -j $(nproc)",
+            "command": "cmake --build build/Debug --config Debug --target chip-8-interpreter --",
             "group": "build",
-            "problemMatcher": ["$gcc"],
-            "detail": "Configura y compila en modo Debug usando todos los cores."
+            "problemMatcher": ["$msCompile"],
+            "detail": "Compila en modo Debug usando todos los cores."
         },
         {
             "label": "Build Release",
             "type": "shell",
-            "command": "cd build/Release && make chip-8-interpreter -j $(nproc)",
+            "command": "cmake --build build/Release --config Release --target chip-8-interpreter --",
             "group": "build",
-            "problemMatcher": ["$gcc"],
-            "detail": "Configura y compila en modo Release con optimizaciones activadas."
+            "problemMatcher": ["$msCompile"],
+            "detail": "Compila en modo Release con optimizaciones activadas."
         },
         {
             "label": "Clean Debug",
             "type": "shell",
-            "command": "cd build/Release && make clean chip-8-interpreter -j $(nproc)",
+            "command": "cmake --build build/Debug --config Debug --target clean --",
             "group": "build",
-            "problemMatcher": ["$gcc"],
+            "problemMatcher": ["$msCompile"],
             "detail": "Limpia los artefactos de compilación Debug."
         },
         {
             "label": "Clean Release",
             "type": "shell",
-            "command": "make -C build/Release clean",
+            "command": "cmake --build build/Release --config Release --target clean --",
             "group": "build",
-            "problemMatcher": ["$gcc"],
+            "problemMatcher": ["$msCompile"],
             "detail": "Limpia los artefactos de compilación Release."
         }
     ]
