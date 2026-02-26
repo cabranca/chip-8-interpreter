@@ -4,7 +4,11 @@
   "C_Cpp.formatting": "clangFormat",
   "C_Cpp.clang_format_style": "file",
   "cmake.buildDirectory": "${workspaceFolder}/build/${buildType}",
-  "cmake.generator": "Ninja",
+  "cmake.generator": "Unix Makefiles",
+  "cmake.configureSettings": {
+    "CMAKE_C_COMPILER": "/usr/bin/gcc-14",
+    "CMAKE_CXX_COMPILER": "/usr/bin/g++-14"
+  },
   "[cpp]": {
     "editor.defaultFormatter": "xaver.clang-format",
     "editor.formatOnSave": false
