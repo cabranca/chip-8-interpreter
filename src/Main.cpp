@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "Chip8.h"
+import TestModule;
 
 enum class ROMLoadError
 {

@@ -1,16 +1,21 @@
-#pragma once
+module;
 
+#include <array>
+#include <cstdint>
 #include <optional>
 #include <random>
 #include <stack>
+#include <vector>
 
 #include "AudioEngine.h"
 #include "Renderer.h"
 
+export module TestModule;
+
 namespace chip8
 {
 
-    class Chip8
+    export class Chip8
     {
       public:
         Chip8();
