@@ -14,7 +14,7 @@ namespace chip8
     {
       public:
         Chip8();
-        void loadProgram(uint8_t *data, size_t size);
+        void loadProgram(const std::vector<uint8_t>& program);
         void run();
 
       private:
