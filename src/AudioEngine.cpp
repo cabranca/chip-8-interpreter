@@ -1,10 +1,9 @@
 module;
 
 #include <SDL3/SDL.h>
+#include <print>
 
 module chip8;
-
-import std;
 
 namespace chip8
 {

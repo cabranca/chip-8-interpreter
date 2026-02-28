@@ -1,6 +1,6 @@
 module;
 
-class SDL_AudioStream;
+#include <SDL3/SDL.h>
 
 export module chip8:audio;
 

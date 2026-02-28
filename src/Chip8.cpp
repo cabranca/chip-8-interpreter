@@ -1,12 +1,12 @@
 module;
 
+#include <array>
 #include <cstdint>
 #include <cstring>
+#include <optional>
 #include <SDL3/SDL.h>
 
 module chip8;
-import std;
-
 
 namespace chip8
 {

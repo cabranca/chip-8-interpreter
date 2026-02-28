@@ -1,9 +1,11 @@
 module;
 
 #include <cstdint>
+#include <vector>
+#include <stack>
+#include <random>
 
 export module chip8:interpreter;
-import std;
 import :renderer;
 import :audio;
 

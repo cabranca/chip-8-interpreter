@@ -1,14 +1,10 @@
 module;
 
+#include <array>
 #include <cstdint>
-
-class SDL_Window;
-class SDL_Renderer;
-class SDL_Texture;
+#include <SDL3/SDL.h>
 
 export module chip8:renderer;
-
-import std;
 
 namespace chip8
 {
