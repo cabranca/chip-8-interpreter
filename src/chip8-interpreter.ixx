@@ -1,9 +1,10 @@
 module;
 
 #include <cstdint>
-#include <vector>
-#include <stack>
 #include <random>
+#include <span>
+#include <stack>
+#include <vector>
 
 export module chip8:interpreter;
 import :renderer;
@@ -16,7 +17,7 @@ namespace chip8
     {
       public:
         Chip8();
-        void loadProgram(const std::vector<uint8_t>& program);
+        void loadProgram(std::span<const uint8_t> program);
         void run();
 
       private:

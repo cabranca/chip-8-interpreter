@@ -58,7 +58,7 @@ namespace chip8
         SDL_QuitSubSystem(SDL_INIT_VIDEO);
     }
 
-    void Renderer::update(const std::array<uint8_t, 2048> frameBuffer)
+    void Renderer::update(const std::array<uint8_t, 2048>& frameBuffer)
     {
         uint32_t* pixels;
         int pitch;

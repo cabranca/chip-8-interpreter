@@ -12,6 +12,9 @@ namespace chip8
         AudioEngine();
         ~AudioEngine();
 
+        AudioEngine(const AudioEngine &) = delete;
+        AudioEngine &operator=(const AudioEngine &) = delete;
+
         void play();
         void update();
         void stop();
@@ -19,6 +22,6 @@ namespace chip8
       private:
         SDL_AudioStream *m_AudioStream = nullptr;
 
-        int m_CurrentSineSample = 0.f;
+        int m_CurrentSineSample = 0;
     };
 }

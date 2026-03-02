@@ -1,6 +1,7 @@
 module;
 
 #include <SDL3/SDL.h>
+#include <array>
 #include <print>
 
 module chip8;
@@ -50,14 +51,13 @@ namespace chip8
         const int minimum_audio = (8000 * sizeof(float)) / 2;
         if (SDL_GetAudioStreamQueued(m_AudioStream) < minimum_audio)
         {
-            static float samples[512]; /* this will feed 512 samples each frame
+            std::array<float, 512> samples; /* this will feed 512 samples each frame
                                                       until we get to our maximum. */
-            int i;
-
+            
             /* generate a 440Hz pure tone */
-            for (i = 0; i < SDL_arraysize(samples); i++)
+            for (size_t i = 0; i < samples.size(); i++)
             {
-                const int freq = 440;
+                constexpr int freq = 440;
                 const float phase = m_CurrentSineSample * freq / 8000.0f;
                 samples[i] = SDL_sinf(phase * 2 * SDL_PI_F);
                 m_CurrentSineSample++;
@@ -68,7 +68,7 @@ namespace chip8
 
             /* feed the new data to the stream. It will queue at the end, and
              * trickle out as the hardware needs more data. */
-            SDL_PutAudioStreamData(m_AudioStream, samples, sizeof(samples));
+            SDL_PutAudioStreamData(m_AudioStream, samples.data(), sizeof(samples));
         }
     }
 

@@ -79,9 +79,9 @@ namespace chip8
         std::copy(FONT_SET.begin(), FONT_SET.end(), m_Memory.begin() + FONT_START_ADDRESS);
     }
 
-    void Chip8::loadProgram(const std::vector<uint8_t>& program)
+    void Chip8::loadProgram(std::span<const uint8_t> program)
     {
-        memcpy(&m_Memory.at(0x200), program.data(), program.size());
+        std::copy_n(program.begin(), program.size(), m_Memory.begin() + 0x200);
     }
 
     void Chip8::run()
@@ -300,8 +300,7 @@ namespace chip8
 
     void Chip8::clearScreen()
     {
-        for (auto &pixel : m_Video)
-            pixel = 0;
+        m_Video.fill(0);
         m_Reg.at(0xF) = 0;
         m_Renderer.update(m_Video);
     }
@@ -365,28 +364,19 @@ namespace chip8
 
     void Chip8::add(uint8_t x, uint8_t y)
     {
-        if (m_Reg.at(x) + m_Reg.at(y) > 255)
-            m_Reg.at(0xF) = 1;
-        else
-            m_Reg.at(0xF) = 0;
+        m_Reg.at(0xF) = static_cast<uint8_t>(m_Reg.at(x) + m_Reg.at(y) > 255);
         m_Reg.at(x) += m_Reg.at(y);
     }
 
     void Chip8::substractYtoX(uint8_t x, uint8_t y)
     {
-        if (m_Reg.at(x) > m_Reg.at(y))
-            m_Reg.at(0xF) = 1;
-        else
-            m_Reg.at(0xF) = 0;
+        m_Reg.at(0xF) = static_cast<uint8_t>(m_Reg.at(x) > m_Reg.at(y));
         m_Reg.at(x) -= m_Reg.at(y);
     }
 
     void Chip8::substractXtoY(uint8_t x, uint8_t y)
     {
-        if (m_Reg.at(y) > m_Reg.at(x))
-            m_Reg.at(0xF) = 1;
-        else
-            m_Reg.at(0xF) = 0;
+        m_Reg.at(0xF) = static_cast<uint8_t>(m_Reg.at(y) > m_Reg.at(x));
         m_Reg.at(x) = m_Reg.at(y) - m_Reg.at(x);
     }
 
@@ -491,10 +481,7 @@ namespace chip8
     
     void Chip8::addToIndex(uint8_t x)
     {
-        if (m_IReg + m_Reg.at(x) > 0x0FFF)
-            m_Reg.at(0xF) = 1;
-        else
-            m_Reg.at(0xF) = 0;
+        m_Reg.at(0xF) = static_cast<uint8_t>(m_IReg + m_Reg.at(x) > 0x0FFF);
         m_IReg += m_Reg.at(x);
     }
 

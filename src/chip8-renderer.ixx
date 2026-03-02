@@ -14,7 +14,10 @@ namespace chip8
         Renderer();
         ~Renderer();
 
-        void update(const std::array<uint8_t, 2048> frameBuffer);
+        Renderer(const Renderer &) = delete;
+        Renderer &operator=(const Renderer &) = delete;
+
+        void update(const std::array<uint8_t, 2048>& frameBuffer);
 
       private:
         SDL_Window *m_Window;
