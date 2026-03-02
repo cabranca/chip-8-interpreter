@@ -82,7 +82,7 @@ namespace chip8
 
     void Chip8::loadProgram(std::span<const uint8_t> program)
     {
-        std::copy_n(program.begin(), program.size(), m_Memory.begin() + 0x200);
+        std::ranges::copy(program, m_Memory.begin() + 0x200);
     }
 
     void Chip8::run()
