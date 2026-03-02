@@ -3,6 +3,7 @@ module;
 #include <array>
 #include <cstdint>
 #include <cstring>
+#include <mdspan>
 #include <optional>
 #include <SDL3/SDL.h>
 
@@ -442,12 +443,12 @@ namespace chip8
                 if (spritePixel == 0)
                     continue;
 
-                const uint16_t screenIndex = (yPos + row) * 64 + (xPos + col);
+                const std::mdspan video_view(m_Video.data(), 32, 64);
 
-                if (m_Video.at(screenIndex) == 1)
+                if (video_view[yPos + row, xPos + col] == 1)
                     m_Reg.at(0xF) = 1;
 
-                m_Video.at(screenIndex) ^= 1;
+                video_view[yPos + row, xPos + col] ^= 1;
             }
         }
 
