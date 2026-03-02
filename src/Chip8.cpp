@@ -21,7 +21,7 @@ namespace chip8
 
     // Each character is a 4x5 pixel sprite stored as 5 bytes.
     // Characters: 0 1 2 3 4 5 6 7 8 9 A B C D E F
-    constexpr std::array<uint8_t, 80> FONT_SET = {
+    constexpr auto FONT_SET = std::to_array ({
         0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
         0x20, 0x60, 0x20, 0x20, 0x70, // 1
         0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
@@ -38,7 +38,7 @@ namespace chip8
         0xE0, 0x90, 0x90, 0x90, 0xE0, // D
         0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
         0xF0, 0x80, 0xF0, 0x80, 0x80, // F
-    };
+    });
 
     constexpr std::array<std::pair<SDL_Scancode, uint8_t>, 16> SDL_TO_CHIP8_KEYS = {{
         {SDL_SCANCODE_1, 0x1},
