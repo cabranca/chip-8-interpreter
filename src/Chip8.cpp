@@ -488,13 +488,14 @@ namespace chip8
 
     void Chip8::getKey(uint8_t x)
     {
-        for (uint8_t i = 0; i <= 0xF; i++)
+        for (int i = 0; bool pressed : m_KeyMap)
         {
-            if (m_KeyMap.at(i))
+            if (pressed)
             {
                 m_Reg.at(x) = i;
                 return;
             }
+            i++;
         }
         m_PC -= 2;
     }
